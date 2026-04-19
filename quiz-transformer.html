@@ -1,95 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Application</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        #quiz-container { margin: 20px; }
-        .hint { color: gray; }
-        .hint-btn { cursor: pointer; }
-    </style>
-</head>
-<body>
-    <div id="quiz-container">
-        <h1>Quiz Application</h1>
-        <div id="question"></div>
-        <input type="number" id="answer" placeholder="Your answer" />
-        <button id="submit">Submit</button>
-        <button id="restart">Restart</button>
-        <div class="hint-btn" id="hint-btn">Request a hint</div>
-        <div class="hint" id="hint"></div>
-        <div id="score">Score: 0</div>
-        <div id="coins">Coins: 10</div>
-    </div>
+    <title>Quiz Transformateur</title>
     <script>
         let score = 0;
-        let coins = 10;
-        let hintUsed = false;
+        let hintsUsed = 0;
+        const maxHints = 2; // Maximum hints per question
         const questions = [
-            { question: 'What is 2 + 2?', answer: 4 },
-            { question: 'What is the capital of France?', answer: 'Paris' },
-            { question: 'What is 5 * 6?', answer: 30 }
+            {
+                question: 'Quelle est la capitale de la France?',
+                answers: ['Paris', 'Lyon', 'Marseille'],
+                correct: 0
+            },
+            // Add more questions as needed
         ];
-        let currentQuestionIndex = 0;
-
-        function loadState() {
-            const savedScore = localStorage.getItem('score');
-            const savedCoins = localStorage.getItem('coins');
-            score = savedScore ? parseInt(savedScore) : 0;
-            coins = savedCoins ? parseInt(savedCoins) : 10;
-            document.getElementById('score').innerText = 'Score: ' + score;
-            document.getElementById('coins').innerText = 'Coins: ' + coins;
+        
+        function displayQuestion(index) {
+            const questionContainer = document.getElementById('question');
+            questionContainer.innerHTML = questions[index].question;
+            // Display answers...
         }
-
-        function saveState() {
-            localStorage.setItem('score', score);
-            localStorage.setItem('coins', coins);
-        }
-
-        function loadQuestion() {
-            const questionElement = document.getElementById('question');
-            questionElement.innerText = questions[currentQuestionIndex].question;
-            hintUsed = false;
-            document.getElementById('hint').innerText = '';
-        }
-
-        document.getElementById('submit').onclick = function () {
-            const answer = document.getElementById('answer').value;
-            if (answer == questions[currentQuestionIndex].answer) {
-                score += 1;
-                coins = Math.max(0, coins - 1);
-                alert('Correct!');
+        
+        function useHint() {
+            if (hintsUsed < maxHints) {
+                // Provide a hint logic...
+                hintsUsed++;
             } else {
-                alert('Wrong!');
+                alert('Aucun indice restant pour cette question!');
             }
-            saveState();
-            loadQuestion();
-            document.getElementById('score').innerText = 'Score: ' + score;
-            document.getElementById('coins').innerText = 'Coins: ' + coins;
-        };
-
-        document.getElementById('hint-btn').onclick = function () {
-            if (!hintUsed) {
-                document.getElementById('hint').innerText = 'Hint: Think about basic arithmetic!';
-                hintUsed = true;
-            } else {
-                alert('You can only use one hint per question.');
-            }
-        };
-
-        document.getElementById('restart').onclick = function () {
+        }
+        
+        function saveProgress() {
+            localStorage.setItem('quizScore', score);
+            localStorage.setItem('hintsUsed', hintsUsed);
+        }
+        
+        function restartQuiz() {
             score = 0;
-            coins = 10;
-            saveState();
-            loadQuestion();
-            document.getElementById('score').innerText = 'Score: ' + score;
-            document.getElementById('coins').innerText = 'Coins: ' + coins;
-        };
-
-        loadState();
-        loadQuestion();
+            hintsUsed = 0;
+            localStorage.clear();
+            // Reload the quiz...
+        }
     </script>
+</head>
+<body>
+    <div id="quiz">
+        <h1>Bienvenue dans le Quiz!</h1>
+        <div id="question"></div>
+        <button onclick="useHint()">Utiliser un indice</button>
+        <button onclick="restartQuiz()">Redémarrer le quiz</button>
+    </div>
 </body>
 </html>
