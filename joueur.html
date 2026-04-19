@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #game {
+            margin: 20px;
+        }
+        .hint {
+            color: blue;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game">
+    <h1>Quiz Game</h1>
+    <div id="coins">Coins: <span id="coinCount">0</span></div>
+    <div id="question">
+        <h2>Question 1: What is the capital of France?</h2>
+        <button onclick="answer('A')">A: Berlin</button>
+        <button onclick="answer('B')">B: Madrid</button>
+        <button onclick="answer('C')">C: Paris</button>
+        <button onclick="answer('D')">D: Lisbon</button>
+        <div class="hint" onclick="useHint()">Use Hint (10 Coins)</div>
+    </div>
+</div>
+
+<script>
+    let coinCount = 0;
+
+    function answer(option) {
+        if (option === 'C') {
+            alert("Correct!");
+            coinCount += 10;
+        } else {
+            alert("Wrong answer!");
+        }
+        document.getElementById("coinCount").innerText = coinCount;
+    }
+
+    function useHint() {
+        if (coinCount >= 10) {
+            coinCount -= 10;
+            alert("Here's a hint! The answer starts with 'P'.");
+            document.getElementById("coinCount").innerText = coinCount;
+        } else {
+            alert("Not enough coins!");
+        }
+    }
+</script>
+
+</body>
+</html>
