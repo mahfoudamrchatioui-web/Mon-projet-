@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <script>
+        function saveQuestion() {
+            const password = document.getElementById('password').value;
+            if (password !== '709amrmahfoud') {
+                alert('Incorrect Password!');
+                return;
+            }
+            const question = document.getElementById('question').value;
+            const answers = [
+                document.getElementById('answer1').value,
+                document.getElementById('answer2').value,
+                document.getElementById('answer3').value,
+                document.getElementById('answer4').value,
+            ];
+            const correctAnswer = document.getElementById('correctAnswer').value;
+            const hint = document.getElementById('hint').value;
+
+            const quizData = { question, answers, correctAnswer, hint };
+            let quizQuestions = JSON.parse(localStorage.getItem('quizQuestions')) || [];
+            quizQuestions.push(quizData);
+            localStorage.setItem('quizQuestions', JSON.stringify(quizQuestions));
+            alert('Question added!');
+            document.getElementById('quizForm').reset();
+        }
+        function displayQuestions() {
+            const quizQuestions = JSON.parse(localStorage.getItem('quizQuestions')) || [];
+            const questionsList = document.getElementById('questionsList');
+            questionsList.innerHTML = '';
+            quizQuestions.forEach((q, index) => {
+                questionsList.innerHTML += `<li>${q.question} <button onclick='deleteQuestion(${index})'>Delete</button></li>`;
+            });
+        }
+        function deleteQuestion(index) {
+            let quizQuestions = JSON.parse(localStorage.getItem('quizQuestions')) || [];
+            quizQuestions.splice(index, 1);
+            localStorage.setItem('quizQuestions', JSON.stringify(quizQuestions));
+            displayQuestions();
+            alert('Question deleted!');
+        }
+        window.onload = displayQuestions;
+    </script>
+</head>
+<body>
+    <h1>Admin Panel for Managing Quiz Questions</h1>
+    <form id="quizForm">
+        <label for="question">Question:</label><br>
+        <input type="text" id="question" required><br>
+        <label for="answer1">Answer 1:</label><br>
+        <input type="text" id="answer1" required><br>
+        <label for="answer2">Answer 2:</label><br>
+        <input type="text" id="answer2" required><br>
+        <label for="answer3">Answer 3:</label><br>
+        <input type="text" id="answer3" required><br>
+        <label for="answer4">Answer 4:</label><br>
+        <input type="text" id="answer4" required><br>
+        <label for="correctAnswer">Correct Answer (1-4):</label><br>
+        <input type="number" id="correctAnswer" min="1" max="4" required><br>
+        <label for="hint">Hint:</label><br>
+        <input type="text" id="hint"><br><br>
+        <input type="password" id="password" required placeholder="Enter Admin Password"><br><br>
+        <button type="button" onclick="saveQuestion()">Add Question</button>
+    </form>
+    <h2>Current Questions:</h2>
+    <ul id="questionsList"></ul>
+</body>
+</html>
